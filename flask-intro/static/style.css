@@ -1,0 +1,16 @@
+.packages{
+	max-height:400px;
+	/*max-width: 600px;*/
+	overflow-y: scroll;
+}
+
+.pip_packages{
+	/*float: right;*/
+	position: absolute;
+	max-height:400px;
+	/*max-width: 600px;*/
+	overflow-y: scroll;
+}
+
+.package_table{
+}
