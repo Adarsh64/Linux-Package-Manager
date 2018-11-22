@@ -12,5 +12,19 @@
 	overflow-y: scroll;
 }
 
-.package_table{
+.search{
+	position: absolute;
+	left: 500px;
+}
+
+.search input[type=text]{
+	padding: 10px;
+	width: 350px;
+}
+
+#search_but{
+  background-color: DodgerBlue;
+  color: #fff;
+  cursor: pointer;
+  padding: 10px;
 }
