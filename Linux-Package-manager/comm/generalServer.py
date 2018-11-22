@@ -44,6 +44,15 @@ while(flag):
 				s.send(("../Packages/"+fzip).encode('utf-8'))
 		clientsocket.close()
 				break;
+	elif("install" in command):
+		cmd = command.split(sep = " ")
+		packages = os.listdir("../Packages")
+		#cmd[1] gives package name
+		for fzip in packages:
+			if(cmd[1] in fzip):
+				s.send(("../install"+cmd[1]+".sh").encode('utf-8'))
+		clientsocket.close()
+				break;
 	elif(command == "stop"):
 		clientsocket.close()
 		s.close()
