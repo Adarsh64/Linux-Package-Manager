@@ -5,19 +5,24 @@ import os
 import glob
 import time
 #creating socket
-packages = [f for f in glob.glob("../Packages")]
+<<<<<<< HEAD
+packages = os.listdir("../Packages")
+#print(packages)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # connecting to client
-s.connect(('192.168.0.102', 2018))
-serversocket.listen(1)
+s.connect(('10.0.0.2', 2018))
 print("Connection successful!")
 for i in packages:
-    info = os.stat(i)
-    package_size = info.st_size >> 20
-    find_version = os.listdir(i)
-    find_version = find_version[0].split(sep = "-")
-    version_number = find_version[-1]
-    s.send(i+","+package_size+","+version_number+";")
+	path = "../Packages/"+i
+	info = os.stat(path)
+	#print(info.st_size)
+	package_size = str(info.st_size)
+	find_version = os.listdir(path)
+	find_version = find_version[0].split(sep = "-")
+	version_number = str(find_version[-1])
+	version_number = version_number.replace(".tgz", "")
+	print(i+","+package_size+","+version_number+";")
+	s.send((i+","+package_size+","+version_number+";").encode('utf-8'))
 s.close()
 print("Connection Closed!")
