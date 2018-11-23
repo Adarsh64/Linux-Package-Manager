@@ -1,0 +1,144 @@
+<html>
+<head>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<style type="text/css">
+		dtab{padding-left: 4em;}
+		btab{padding-left: 4em;}
+		tab{padding-left: 8em;}
+	</style>
+</head>
+<body>
+	<h1>Linux package manager</h1>
+	<h2>Installed Packages</h2>
+	<div class='packages'>
+	<table class="package_table" border="1" rules="all">
+		<tr>
+				<th>Package</th>
+				<th>Version</th>
+				<th>Architecture</th>
+				<th>Description</th>	
+		</tr>
+		{% for p in packages%}
+			<tr>
+			{% for ele in p%}
+				<td>{{ele}}</td>
+			{% endfor %}
+			</tr>
+		{% endfor %}
+	</table>
+	</div>
+	<h2>Python Packages</h2>
+	<div class="pip_packages">
+		<table border="1" rules="all">
+			<tr>
+				<th>Package</th>
+				<th>Version</th>	
+			</tr>
+			{% for p in pip_packages%}
+				<tr>
+					{% for ele in p%}
+						<td>{{ele}}</td>
+					{% endfor %}
+				</tr>
+			{% endfor %}
+		</table>
+	</div>
+
+	<!-- <div class="search"> -->
+		<!-- Creating a search box -->
+		<!-- <h1>Search</h1> -->
+		<!-- <input type="text" placeholder="Name"> -->
+		<!-- <button id='search_but'>Search</button> -->
+	<!-- </div> -->
+
+
+	<div class="server_packages">
+		<h2>Available Packages</h2>
+		<table border="1" rules="all" class="sertable">
+			<tr>
+				<th>Package</th>
+				<th>Size</th>
+				<th>Version</th>
+				<th>S</th>	
+			</tr>
+			{% for p in package_list%}
+				<tr>
+					{% for ele in p%}
+						<td>{{ele}}</td>
+					{% endfor %}
+					<td><input type="checkbox"></td>
+				</tr>
+			{% endfor %}
+		</table>
+	</div>
+
+			<div class="download">
+			<button id="download_but" onclick="down()">Download</button>
+			<br><br>
+			<button id="install_but" onclick="ins()">Install</button>
+			<br><br>
+			<button id="download_but" onclick="stop()">Stop</button>
+			</div>
+		
+		<form action="/download/" method="post" id="download_form">
+		<input type="textbox" name="download_text" id="download_text_id">
+		<button type="submit" id='down_sub' style="visibility: hidden;"></button>
+		</form>	
+		<form action="/stop/" method="post" id="stop_form">
+		<button type="submit" id='stop_sub' style="visibility: hidden;"></button>
+		</form>	
+
+		
+		<form action="/install/" method="post">
+		
+		<button type="submit" id='ins_sub' style="visibility: hidden;"></button>
+		</form>
+	
+
+	<script type="text/javascript">
+		var numOfPackages = 2;
+		var avapkg = document.querySelector('.sertable').rows;
+		var arr = '{{check_box}}';
+		arr = arr.slice(1,arr.length-1);
+		arr.split(",");
+		for(var i=0;i<numOfPackages;i++)
+		{
+			if(parseInt(arr[i])==1)
+			{
+				var row = avapkg[i+1];
+				row.setAttribute('id','colored');
+				row["cells"][3].children[0].click();
+				row["cells"][3].children[0].disabled = true;
+			}
+		}
+
+		function down()
+		{	//alert("hi");
+			var avapkg = document.querySelector('.sertable').rows;
+			var str = "";
+			for(var i=0;i<numOfPackages;i++)
+				{
+					var row = avapkg[i+1];
+					if(row["cells"][3].children[0].checked && row["cells"][3].children[0].disabled==false)
+					{
+						str = str+i+',';
+					}
+					else
+						str+='0'+',';
+				}
+			//alert(str);
+			var textbox = document.querySelector('#download_text_id');
+			textbox.value = str;
+			alert(textbox.value);
+			var download_form = document.querySelector("#download_form");
+			download_form.submit();
+		}
+
+		function stop()
+		{
+			var stop_form = document.querySelector("#stop_form");
+			stop_form.submit();
+		}
+	</script>
+	</body>
+</html>

@@ -7,9 +7,20 @@ import glob
 import json
 package_list = []
 app = Flask(__name__)
+
+@app.route('/stop/',methods=['POST'])
+def stop():
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+	s.connect(('192.168.43.15', 4006)) 
+	s.send(("stop").encode('utf-8'))
+	s.close()
+	return '', 200
 @app.route('/download/',methods=['POST'])
 def download():
-	#if request.method == 'POST':
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+	s.connect(('192.168.43.15', 4006)) 
 	names = request.form['download_text']
 	names = names.split(',')[0:-1]
 	for i in range(len(names)):
@@ -17,7 +28,28 @@ def download():
 	for i in range(len(package_list)):
 		if names[i]:
 			print("{}".format(package_list[i]))
-	home()
+			s.send(("download "+(package_list[i][0])).encode('utf-8'))
+			#s.bind(('192.168.43.15',4000))
+			#s.listen(1)
+			print("Waiting for response from server")
+			flag = True
+			while(flag):
+				#accepting connection from client
+				#clientsocket, addr = s.accept()
+				print("Accepting connection!")
+				print(int(package_list[i][1]))
+				start = time.time()
+				transfer = (s.recv(int(package_list[i][1])))
+				end = time.time()
+				time.sleep(2)
+				f = open(package_list[i][0]+".zip",'wb')
+				f.write(transfer)
+				f.close()
+				print("file created")
+				print("time taken to download  {}".format(end-start))
+				#clientsocket.close()
+				flag = False
+	s.close()
 	return '', 200
 @app.route('/')
 def home():
@@ -34,7 +66,7 @@ def home():
 
 	# creating a socket to listen for incoming connections
 	hello_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	port = 4028
+	port = 4006
 	hello_socket.connect(('192.168.43.15',port))
 	hello_socket.send(("hello").encode('utf-8'))
 
