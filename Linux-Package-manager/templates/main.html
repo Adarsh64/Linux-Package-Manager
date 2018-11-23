@@ -76,13 +76,17 @@
 			<button id="download_but" onclick="down()">Download</button>
 			<br><br>
 			<button id="install_but" onclick="ins()">Install</button>
+			<br><br>
+			<button id="download_but" onclick="stop()">Stop</button>
 			</div>
 		
 		<form action="/download/" method="post" id="download_form">
 		<input type="textbox" name="download_text" id="download_text_id">
 		<button type="submit" id='down_sub' style="visibility: hidden;"></button>
 		</form>	
-
+		<form action="/stop/" method="post" id="stop_form">
+		<button type="submit" id='stop_sub' style="visibility: hidden;"></button>
+		</form>	
 
 		
 		<form action="/install/" method="post">
@@ -130,9 +134,10 @@
 			download_form.submit();
 		}
 
-		function ins()
+		function stop()
 		{
-
+			var stop_form = document.querySelector("#stop_form");
+			stop_form.submit();
 		}
 	</script>
 	</body>
