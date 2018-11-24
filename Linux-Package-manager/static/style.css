@@ -28,3 +28,17 @@
   cursor: pointer;
   padding: 10px;
 }
+
+.server_packages{
+	position: absolute;
+	right: 500px;
+}
+#colored{
+	background-color: lightgreen;
+}
+
+.download{
+	position: absolute;
+	right: 600px;
+	top:730px;
+}
