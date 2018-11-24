@@ -8,10 +8,44 @@ import json
 package_list = []
 app = Flask(__name__)
 
+@app.route('/install', methods=['POST'])
+def install():
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.connect(('192.168.43.15', 4006)) 
+	names = request.form['download_text']
+	names = names.split(',')[0:-1]
+	for i in range(len(names)):
+		names[i] = int(names[i])
+	for i in range(len(package_list)):
+		if names[i]:
+			print("{}".format(package_list[i]))
+			s.send(("install "+(package_list[i][0])).encode('utf-8'))
+			#s.bind(('192.168.43.15',4000))
+			#s.listen(1)
+			print("Waiting for response from server")
+			flag = True
+			while(flag):
+				#accepting connection from client
+				#clientsocket, addr = s.accept()
+				print("Accepting connection!")
+				print(int(package_list[i][1]))
+				start = time.time()
+				transfer = (s.recv(int(package_list[i][1])))
+				end = time.time()
+				time.sleep(2)
+				f = open("../install/"+package_list[i][0]+".sh",'wb')
+				f.write(transfer)
+				f.close()
+				print("install file downloaded")
+				print("time taken to download  {}".format(end-start))
+				#clientsocket.close()
+				subprocess.call("../install/install"+package_list[i][0]+".sh")
+				flag = False
+	s.close()
+	return '', 200
 @app.route('/stop/',methods=['POST'])
 def stop():
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
 	s.connect(('192.168.43.15', 4006)) 
 	s.send(("stop").encode('utf-8'))
 	s.close()
@@ -19,7 +53,6 @@ def stop():
 @app.route('/download/',methods=['POST'])
 def download():
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
 	s.connect(('192.168.43.15', 4006)) 
 	names = request.form['download_text']
 	names = names.split(',')[0:-1]
