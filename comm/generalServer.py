@@ -43,12 +43,11 @@ while(flag):
 		#cmd[1] gives package name
 		for fzip in packages:
 			if(cmd[1] in fzip):
-				path = os.listdir("../Packages/"+fzip)[0]
-				print(path)
-				f = open("../Packages/"+fzip+'/'+path,'rb')
-				#print(f)
-				#print(f.read())
-				clientsocket.send(f.read())
+				zip_name = os.listdir("../Packages/"+fzip)
+				print(fzip, zip_name[0])
+				f = open("../Packages/"+fzip+"/"+zip_name[0], 'rb')
+				clientsocket.send((f.read()))
+				time.sleep(10)
 				f.close()
 				clientsocket.close()
 				break
@@ -68,3 +67,4 @@ while(flag):
 	else:
 		clientsocket.close()
 		print("Command not defined!")
+
