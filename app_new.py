@@ -7,11 +7,11 @@ import glob
 import json
 package_list = []
 app = Flask(__name__)
-
+port = 4012
 @app.route('/install', methods=['POST'])
 def install():
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.connect(('192.168.43.15', 4006)) 
+	s.connect(('192.168.43.15', port)) 
 	names = request.form['download_text']
 	names = names.split(',')[0:-1]
 	for i in range(len(names)):
@@ -25,6 +25,7 @@ def install():
 			print("Waiting for response from server")
 			flag = True
 			while(flag):
+				#time.sleep(10)
 				#accepting connection from client
 				#clientsocket, addr = s.accept()
 				print("Accepting connection!")
@@ -32,7 +33,7 @@ def install():
 				start = time.time()
 				transfer = (s.recv(int(package_list[i][1])))
 				end = time.time()
-				time.sleep(2)
+				#time.sleep(2)
 				f = open("../install/"+package_list[i][0]+".sh",'wb')
 				f.write(transfer)
 				f.close()
@@ -46,14 +47,14 @@ def install():
 @app.route('/stop/',methods=['POST'])
 def stop():
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.connect(('192.168.43.15', 4006)) 
+	s.connect(('192.168.43.15', port)) 
 	s.send(("stop").encode('utf-8'))
 	s.close()
 	return '', 200
 @app.route('/download/',methods=['POST'])
 def download():
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.connect(('192.168.43.15', 4006)) 
+	s.connect(('192.168.43.15', port)) 
 	names = request.form['download_text']
 	names = names.split(',')[0:-1]
 	for i in range(len(names)):
@@ -70,13 +71,15 @@ def download():
 				#accepting connection from client
 				#clientsocket, addr = s.accept()
 				print("Accepting connection!")
-				print(int(package_list[i][1]))
-				start = time.time()
-				transfer = (s.recv(int(package_list[i][1])))
-				end = time.time()
-				time.sleep(2)
-				f = open(package_list[i][0]+".zip",'wb')
-				f.write(transfer)
+				f = open(package_list[i][0]+".tar.gz",'wb')
+				#print(int(package_list[i][1]))
+				size_written = 0
+				while size_written<int(package_list[i][1]):
+					start = time.time()
+					transfer = (s.recv(int(package_list[i][1])))
+					f.write(transfer)
+					size_written+=len(transfer)
+					end = time.time()
 				f.close()
 				print("file created")
 				print("time taken to download  {}".format(end-start))
@@ -99,7 +102,6 @@ def home():
 
 	# creating a socket to listen for incoming connections
 	hello_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	port = 4006
 	hello_socket.connect(('192.168.43.15',port))
 	hello_socket.send(("hello").encode('utf-8'))
 
@@ -125,5 +127,3 @@ def home():
 
 if __name__ == '__main__':
 	app.run(debug=True)
-
-

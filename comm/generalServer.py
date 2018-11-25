@@ -6,8 +6,9 @@ import glob
 import time
 
 #creating socket
+port = 4012
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind(('192.168.43.15', 4006))
+s.bind(('192.168.43.15', port))
 s.listen(1)
 
 flag = True
@@ -42,7 +43,13 @@ while(flag):
 		#cmd[1] gives package name
 		for fzip in packages:
 			if(cmd[1] in fzip):
-				clientsocket.send((path+"/"+fzip).encode('utf-8'))
+				path = os.listdir("../Packages/"+fzip)[0]
+				print(path)
+				f = open("../Packages/"+fzip+'/'+path,'rb')
+				#print(f)
+				#print(f.read())
+				clientsocket.send(f.read())
+				f.close()
 				clientsocket.close()
 				break
 	elif("install" in command):
