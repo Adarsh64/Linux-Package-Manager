@@ -79,9 +79,9 @@
 			<br><br>
 			<button id="download_but" onclick="stop()">Stop</button>
 			</div>
-		
-		<form action="/download/" method="post" id="download_form">
-		<input type="textbox" name="download_text" id="download_text_id">
+		<iframe width="0" height="0" border="0" name="new" id="new"></iframe>
+		<form action="/download/" method="post" id="download_form" target="new">
+		<input type="textbox" name="download_text" id="download_text_id" style="visibility: hidden;">
 		<button type="submit" id='down_sub' style="visibility: hidden;"></button>
 		</form>	
 		<form action="/stop/" method="post" id="stop_form">
