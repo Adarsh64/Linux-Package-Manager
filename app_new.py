@@ -5,14 +5,16 @@ import time
 import os
 import glob
 import json
+import stat
 package_list = []
 app = Flask(__name__)
-port = 4013
-@app.route('/install', methods=['POST'])
+port = 4015
+
+@app.route('/install/', methods=['POST'])
 def install():
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.connect(('192.168.43.15', port)) 
-	names = request.form['download_text']
+	names = request.form['install_text']
 	names = names.split(',')[0:-1]
 	for i in range(len(names)):
 		names[i] = int(names[i])
@@ -28,16 +30,18 @@ def install():
 				print("Accepting connection!")
 				print(int(package_list[i][1]))
 				start = time.time()
-				transfer = (s.recv(int(package_list[i][1])))
+				transfer = (s.recv(10000))
 				end = time.time()
 				#time.sleep(2)
-				f = open("../install/"+package_list[i][0]+".sh",'wb')
+				f = open("clientinstall/"+package_list[i][0]+".sh",'wb')
 				f.write(transfer)
 				f.close()
+				subprocess.getoutput("chmod 0774 clientinstall/{}.sh".format(package_list[i][0]))
 				print("install file downloaded")
 				print("time taken to download  {}".format(end-start))
 				#clientsocket.close()
-				subprocess.call("../install/install"+package_list[i][0]+".sh")
+				res = subprocess.getoutput("./clientinstall/"+package_list[i][0]+".sh")
+				print(res)
 				flag = False
 	s.close()
 	return '', 200
