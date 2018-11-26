@@ -7,7 +7,7 @@ import glob
 import json
 package_list = []
 app = Flask(__name__)
-port = 4012
+port = 4013
 @app.route('/install', methods=['POST'])
 def install():
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -25,9 +25,6 @@ def install():
 			print("Waiting for response from server")
 			flag = True
 			while(flag):
-				#time.sleep(10)
-				#accepting connection from client
-				#clientsocket, addr = s.accept()
 				print("Accepting connection!")
 				print(int(package_list[i][1]))
 				start = time.time()
@@ -79,7 +76,7 @@ def download():
 					transfer = (s.recv(int(package_list[i][1])))
 					f.write(transfer)
 					size_written+=len(transfer)
-					end = time.time()
+				end = time.time()
 				f.close()
 				print("file created")
 				print("time taken to download  {}".format(end-start))
@@ -89,6 +86,7 @@ def download():
 	return '', 200
 @app.route('/')
 def home():
+	package_list[:] = []
 	packages = subprocess.getoutput('dpkg -l').split('\n')[5:]
 	pip_packages = subprocess.getoutput('pip list').split('\n')[2:-2]
 	for i in range(0,len(packages)):
