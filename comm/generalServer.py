@@ -6,7 +6,7 @@ import glob
 import time
 
 #creating socket
-port = 4012
+port = 4015
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('192.168.43.15', port))
 s.listen(1)
@@ -20,6 +20,7 @@ while(flag):
 	clientsocket, addr = s.accept()
 	print("Message received!")
 	command = clientsocket.recv(30).decode('utf-8')
+	print('command ',command)
 	if(command == "hello"):
 		print("Listing command executed!")
 		packages = os.listdir("../Packages")
@@ -34,6 +35,7 @@ while(flag):
 			find_version = find_version[0].split(sep = "-")
 			version_number = str(find_version[-1])
 			version_number = version_number.replace(".tar.gz", "")
+			version_number = version_number.replace(".tgz", "")
 			print(i+","+package_size+","+version_number+";")
 			clientsocket.send((i+" " +package_size+" "+version_number+";").encode('utf-8'))
 		clientsocket.close()
@@ -43,22 +45,25 @@ while(flag):
 		#cmd[1] gives package name
 		for fzip in packages:
 			if(cmd[1] in fzip):
-				zip_name = os.listdir("../Packages/"+fzip)
-				print(fzip, zip_name[0])
-				f = open("../Packages/"+fzip+"/"+zip_name[0], 'rb')
-				clientsocket.send((f.read()))
-				time.sleep(10)
+				path = os.listdir("../Packages/"+fzip)[0]
+				print(path)
+				f = open("../Packages/"+fzip+'/'+path,'rb')
+				#print(f)
+				#print(f.read())
+				clientsocket.send(f.read())
 				f.close()
 				clientsocket.close()
 				break
 	elif("install" in command):
 		cmd = command.split(sep = " ")
-		packages = os.listdir("../Packages")
+		scripts = os.listdir("../install")
 		#cmd[1] gives package name
-		for fzip in packages:
-			if(cmd[1] in fzip):
-				clientsocket.send(("../install"+cmd[1]+".sh").encode('utf-8'))
+		for f in scripts:
+			if(cmd[1] in f):
+				f = open("../install/"+f,'rb')
+				clientsocket.send((f.read()))
 				clientsocket.close()
+				print("install file sent")
 				break
 	elif(command == "stop"):
 		clientsocket.close()
@@ -67,4 +72,3 @@ while(flag):
 	else:
 		clientsocket.close()
 		print("Command not defined!")
-
