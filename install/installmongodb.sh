@@ -1,5 +1,5 @@
 echo "Hello" $USER
-tar -zxvf Packages/mongodb/mongodb-linux-arm64-ubuntu1604-4.0.4.tgz
+tar -zxvf ../mongodb-linux-arm64-ubuntu1604-4.0.4.tgz
 sudo echo "export PATH=/home/$USER/Desktop/Packages/mongodb/mongodb-linux-arm64-ubuntu1604-4.0.4/bin:$PATH" >> ~/.bashrc
 
 #creating data and log directories\

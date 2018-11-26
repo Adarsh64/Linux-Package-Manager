@@ -1,5 +1,5 @@
 echo "Hello" $USER
-tar -xvf ../Packages/curl/curl-7.62.0.tar.gz
+tar -xvf ../curl-7.62.0.tar.gz
 cd curl-7.62.0
 ./configure
 
