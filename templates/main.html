@@ -79,18 +79,19 @@
 			<br><br>
 			<button id="download_but" onclick="stop()">Stop</button>
 			</div>
-		<iframe width="0" height="0" border="0" name="new" id="new"></iframe>
+		<!-- <iframe width="0" height="0" border="0" name="new" id="new"></iframe> -->
 		<form action="/download/" method="post" id="download_form" target="new">
 		<input type="textbox" name="download_text" id="download_text_id" style="visibility: hidden;">
 		<button type="submit" id='down_sub' style="visibility: hidden;"></button>
 		</form>	
+
 		<form action="/stop/" method="post" id="stop_form">
 		<button type="submit" id='stop_sub' style="visibility: hidden;"></button>
 		</form>	
 
 		
-		<form action="/install/" method="post">
-		
+		<form action="/install/" method="post" id="install_form" target="new">
+		<input type="textbox" name="install_text" id="install_text_id" style="visibility: hidden;">
 		<button type="submit" id='ins_sub' style="visibility: hidden;"></button>
 		</form>
 	
@@ -129,11 +130,32 @@
 			//alert(str);
 			var textbox = document.querySelector('#download_text_id');
 			textbox.value = str;
-			alert(textbox.value);
+			//alert(textbox.value);
 			var download_form = document.querySelector("#download_form");
 			download_form.submit();
 		}
 
+		function ins()
+		{
+			var avapkg = document.querySelector('.sertable').rows;
+			var str = "";
+			for(var i=0;i<numOfPackages;i++)
+				{
+					var row = avapkg[i+1];
+					if(row["cells"][3].children[0].checked && row["cells"][3].children[0].disabled==false)
+					{
+						str = str+i+',';
+					}
+					else
+						str+='0'+',';
+				}
+			//alert(str);
+			var textbox = document.querySelector('#install_text_id');
+			textbox.value = str;
+			//alert(textbox.value);
+			var install_form = document.querySelector("#install_form");
+			install_form.submit();
+		}
 		function stop()
 		{
 			var stop_form = document.querySelector("#stop_form");
